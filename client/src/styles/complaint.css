@@ -130,6 +130,33 @@ textarea {
   padding: 54px 0 40px;
 }
 
+.history-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 24px 0 26px;
+}
+
+.summary-card {
+  padding: 18px 20px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.05);
+}
+
+.summary-label {
+  display: block;
+  color: #64748b;
+  font-size: 0.88rem;
+  margin-bottom: 8px;
+}
+
+.summary-card strong {
+  font-size: 1.35rem;
+  color: #0f172a;
+}
+
 .history-grid {
   display: grid;
   gap: 24px;
@@ -200,10 +227,38 @@ textarea {
   color: #166534;
 }
 
+.timeline-track {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.timeline-step {
+  padding: 8px 6px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #64748b;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.timeline-step.active {
+  background: #2563eb;
+  color: white;
+}
+
 .history-actions {
   margin-top: 22px;
   display: flex;
   justify-content: flex-end;
+}
+
+.history-note {
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .secondary-btn {
@@ -235,7 +290,8 @@ textarea {
 
 @media (max-width: 960px) {
   .complaint-grid,
-  .form-row {
+  .form-row,
+  .history-summary {
     grid-template-columns: 1fr;
   }
 
@@ -250,7 +306,12 @@ textarea {
 
 @media (max-width: 660px) {
   .complaint-form,
-  .complaint-summary {
+  .complaint-summary,
+  .history-card {
     padding: 24px;
+  }
+
+  .timeline-track {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

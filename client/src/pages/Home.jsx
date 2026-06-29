@@ -6,12 +6,23 @@ import StatsSection from "../components/StatsSection";
 import ComplaintForm from "../components/ComplaintForm";
 import ComplaintHistory from "../components/ComplaintHistory";
 import Footer from "../components/Footer";
+import AuthPanel from "../components/AuthPanel";
 import "../styles/homepage.css";
 
 function Home() {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState("signin");
+  const [userProfile, setUserProfile] = useState(() => {
+    if (typeof window === "undefined") {
+      return null;
+    }
+
+    const savedProfile = window.localStorage.getItem("resolvehub-user");
+    return savedProfile ? JSON.parse(savedProfile) : null;
+  });
   const apiBase = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
   useEffect(() => {
@@ -38,6 +49,21 @@ function Home() {
 
     loadComplaints();
   }, [apiBase]);
+
+  const handleOpenAuth = (mode = "signin") => {
+    setAuthMode(mode);
+    setAuthOpen(true);
+  };
+
+  const handleAuthSuccess = (profile) => {
+    setUserProfile(profile);
+    window.localStorage.setItem("resolvehub-user", JSON.stringify(profile));
+  };
+
+  const handleSignOut = () => {
+    setUserProfile(null);
+    window.localStorage.removeItem("resolvehub-user");
+  };
 
   const handleAddComplaint = (newComplaint) => {
     setComplaints((prev) => [newComplaint, ...prev]);
@@ -77,10 +103,30 @@ function Home() {
 
   return (
     <>
-      <Navbar />
+      <Navbar onOpenAuth={handleOpenAuth} userProfile={userProfile} onSignOut={handleSignOut} />
       <main className="home-layout">
         <HeroSection />
         <Features />
+        <section id="portal" className="portal-preview">
+          <div className="section-header">
+            <p className="eyebrow">Client portal</p>
+            <h2>Give residents and teams a polished experience from sign-in to resolution.</h2>
+          </div>
+          <div className="portal-grid">
+            <article className="portal-card">
+              <h3>Secure sign-in</h3>
+              <p>Clients can sign in or create an account to access case updates and services instantly.</p>
+            </article>
+            <article className="portal-card">
+              <h3>Personalized dashboard</h3>
+              <p>Each account shows the right history, status timeline, and next-step recommendations.</p>
+            </article>
+            <article className="portal-card">
+              <h3>Professional support flow</h3>
+              <p>Built-in navigation and support touchpoints make every interaction feel dependable.</p>
+            </article>
+          </div>
+        </section>
         <section id="about" className="about-section">
           <div className="section-header">
             <p className="eyebrow">Why ResolveHub</p>
@@ -106,7 +152,11 @@ function Home() {
         {loading ? (
           <p className="loading-text">Loading complaint history…</p>
         ) : (
-          <ComplaintHistory complaints={complaints} onStatusChange={handleStatusChange} />
+          <ComplaintHistory
+            complaints={complaints}
+            onStatusChange={handleStatusChange}
+            canManageStatus={userProfile?.role === "staff"}
+          />
         )}
         <StatsSection />
         <section id="contact" className="contact-section">
@@ -133,6 +183,12 @@ function Home() {
         </section>
       </main>
       <Footer />
+      <AuthPanel
+        isOpen={authOpen}
+        mode={authMode}
+        onClose={() => setAuthOpen(false)}
+        onAuthSuccess={handleAuthSuccess}
+      />
     </>
   );
 }

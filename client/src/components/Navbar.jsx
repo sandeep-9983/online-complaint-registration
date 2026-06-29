@@ -1,24 +1,52 @@
 import "../styles/navbar.css";
 
-function Navbar() {
+function Navbar({ onOpenAuth, userProfile, onSignOut }) {
   return (
     <nav className="navbar">
       <div className="brand-group">
-        <div className="logo">ResolveHub</div>
+        <div className="brand-main">
+          <div className="logo">ResolveHub</div>
+          <span className="brand-badge">Client portal</span>
+        </div>
         <p className="brand-tagline">Public complaint intake, routing, tracking, and resolution.</p>
       </div>
 
-      <ul className="nav-links">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#features">Solutions</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#complaint-history">History</a></li>
-        <li><a href="#contact">Support</a></li>
-      </ul>
+      <div className="nav-center">
+        <ul className="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#features">Solutions</a></li>
+          <li><a href="#portal">Portal</a></li>
+          <li><a href="#complaint-history">History</a></li>
+          <li><a href="#contact">Support</a></li>
+        </ul>
+
+        <div className="nav-meta">
+          <span className="nav-pill">24/7 updates</span>
+          <span className="nav-pill">Secure tracking</span>
+        </div>
+      </div>
 
       <div className="nav-actions">
-        <a className="secondary-nav" href="#contact">Support</a>
-        <a className="primary-nav" href="#submit">Request demo</a>
+        {userProfile ? (
+          <>
+            <div className="profile-chip">
+              <span className="profile-name">{userProfile.name}</span>
+              <span className="profile-org">{userProfile.organization}</span>
+            </div>
+            <button className="secondary-nav" type="button" onClick={onSignOut}>
+              Sign out
+            </button>
+          </>
+        ) : (
+          <>
+            <button className="secondary-nav" type="button" onClick={() => onOpenAuth("signin")}>
+              Sign in
+            </button>
+            <button className="primary-nav" type="button" onClick={() => onOpenAuth("signup")}>
+              Create account
+            </button>
+          </>
+        )}
       </div>
     </nav>
   );
