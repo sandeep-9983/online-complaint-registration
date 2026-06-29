@@ -1,6 +1,12 @@
 import "../styles/navbar.css";
 
 function Navbar({ onOpenAuth, userProfile, onSignOut }) {
+  const handleAuthAction = (mode) => {
+    if (typeof onOpenAuth === "function") {
+      onOpenAuth(mode);
+    }
+  };
+
   return (
     <nav className="navbar">
       <div className="brand-group">
@@ -39,10 +45,10 @@ function Navbar({ onOpenAuth, userProfile, onSignOut }) {
           </>
         ) : (
           <>
-            <button className="secondary-nav" type="button" onClick={() => onOpenAuth("signin")}>
+            <button className="secondary-nav" type="button" onClick={() => handleAuthAction("signin")}>
               Sign in
             </button>
-            <button className="primary-nav" type="button" onClick={() => onOpenAuth("signup")}>
+            <button className="primary-nav" type="button" onClick={() => handleAuthAction("signup")}>
               Create account
             </button>
           </>

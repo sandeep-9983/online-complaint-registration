@@ -52,7 +52,11 @@ function Home() {
 
   const handleOpenAuth = (mode = "signin") => {
     setAuthMode(mode);
-    setAuthOpen(true);
+    setAuthOpen(false);
+
+    window.requestAnimationFrame(() => {
+      setAuthOpen(true);
+    });
   };
 
   const handleAuthSuccess = (profile) => {
